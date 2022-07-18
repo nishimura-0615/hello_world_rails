@@ -16,7 +16,7 @@ class UsersController < ApplicationController
     #   account: params[:account],
     #   email: params[:email],
     # )
-    binding.pry
+
     @user = User.new(user_params)
 
      # インスタンスを DB に保存する
@@ -26,7 +26,6 @@ class UsersController < ApplicationController
   end
 
   def update
-    binding.pry
     # 対象のレコードを探す
     @user = User.find(params[:id])
     # 探してきたレコードに対して変更を行う
