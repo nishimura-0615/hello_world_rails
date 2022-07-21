@@ -60,19 +60,29 @@ RSpec.describe "Users", type: :request do
            expect(response).to have_http_status(200)
         end
     end
-
+  end
 
     context "不適切なパラメーターを送信したとき"do
       let(:params) { attributes_for(:user) }
 
-      fit "ユーザーのレコードの作成に失敗する"do
+      it "ユーザーのレコードの作成に失敗する"do
        expect{ subject }.to raise_error(ActionController::ParameterMissing)
       end
     end
 
 
-  describe "PUT /users/:id" do
+  describe "PATCH（PUT) /users/:id" do
+   subject { patch(user_path(user_id),params: params)}
+   let(:params)do
+    { user: { name: Faker::Name.name, created_at: 1.day.ago } }
+   end
+   let(:user_id) { user.id }
+   let(:user) { create(:user) }
     it "ユーザーのレコードを更新できる" do
+      expect { subject }.to change { user.reload.name }.from(user.name).to(params[:user][:name]) &
+                            not_change { user.reload.account } &
+                            not_change { user.reload.email } &
+                            not_change { user.reload.created_at }
     end
   end
 
@@ -80,5 +90,4 @@ RSpec.describe "Users", type: :request do
     it "任意のユーザーのレコードを削除できる" do
     end
   end
-end
 end
